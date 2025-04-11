@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">admixtools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.8</span>
       </span>
     </div>
 
@@ -95,7 +95,15 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">qpf4ratio</span><span class="op">(</span><span class="va">data</span>, <span class="va">pops</span>, boot <span class="op">=</span> <span class="cn">FALSE</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">qpf4ratio</span><span class="op">(</span></span>
+<span>  <span class="va">data</span>,</span>
+<span>  <span class="va">pops</span>,</span>
+<span>  auto_only <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  blgsize <span class="op">=</span> <span class="fl">0.05</span>,</span>
+<span>  poly_only <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  boot <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -110,6 +118,18 @@
 <dt>pops</dt>
 <dd><p>A vector of 5 populations or a five column population matrix.
 The following ratios will be computed: <code>f4(1, 2; 3, 4)/f4(1, 2; 5, 4)</code></p></dd>
+
+
+<dt>auto_only</dt>
+<dd><p>Use only chromosomes 1 to 22.</p></dd>
+
+
+<dt>blgsize</dt>
+<dd><p>SNP block size in Morgan. Default is 0.05 (5 cM). If <code>blgsize</code> is 100 or greater, if will be interpreted as base pair distance rather than centimorgan distance.</p></dd>
+
+
+<dt>poly_only</dt>
+<dd><p>Exclude sites with identical allele frequencies in all populations.</p></dd>
 
 
 <dt>boot</dt>

@@ -308,13 +308,6 @@ qpadm_wrapper = function(pref, left, right, target = NULL, bin = '~np29/o2bin/qp
   run_admixtools(cmd, parse_qpadm_output, outfile, printonly, verbose)
 }
 
-#' Wrapper function around the original qpWave program
-#'
-#'
-#' @export
-#' @inheritParams qpadm
-qpwave_wrapper = qpadm_wrapper
-
 
 #' Wrapper function around the original qpGraph program
 #' @export

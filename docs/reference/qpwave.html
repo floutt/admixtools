@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">admixtools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.8</span>
       </span>
     </div>
 
@@ -100,6 +100,9 @@
 <span>  <span class="va">left</span>,</span>
 <span>  <span class="va">right</span>,</span>
 <span>  fudge <span class="op">=</span> <span class="fl">1e-04</span>,</span>
+<span>  auto_only <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  blgsize <span class="op">=</span> <span class="fl">0.05</span>,</span>
+<span>  poly_only <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  boot <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  constrained <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  cpp <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -126,6 +129,18 @@
 
 <dt>fudge</dt>
 <dd><p>Value added to diagonal matrix elements before inverting</p></dd>
+
+
+<dt>auto_only</dt>
+<dd><p>Use only chromosomes 1 to 22.</p></dd>
+
+
+<dt>blgsize</dt>
+<dd><p>SNP block size in Morgan. Default is 0.05 (5 cM). If <code>blgsize</code> is 100 or greater, if will be interpreted as base pair distance rather than centimorgan distance.</p></dd>
+
+
+<dt>poly_only</dt>
+<dd><p>Exclude sites with identical allele frequencies in all populations.</p></dd>
 
 
 <dt>boot</dt>

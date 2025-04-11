@@ -9,6 +9,9 @@ qpwave(
   left,
   right,
   fudge = 1e-04,
+  auto_only = TRUE,
+  blgsize = 0.05,
+  poly_only = FALSE,
   boot = FALSE,
   constrained = FALSE,
   cpp = TRUE,
@@ -28,6 +31,12 @@ qpwave(
 \item{right}{Right populations (outgroups)}
 
 \item{fudge}{Value added to diagonal matrix elements before inverting}
+
+\item{auto_only}{Use only chromosomes 1 to 22.}
+
+\item{blgsize}{SNP block size in Morgan. Default is 0.05 (5 cM). If \code{blgsize} is 100 or greater, if will be interpreted as base pair distance rather than centimorgan distance.}
+
+\item{poly_only}{Exclude sites with identical allele frequencies in all populations.}
 
 \item{boot}{If \code{FALSE} (the default), block-jackknife resampling will be used to compute standard errors.
 Otherwise, block-bootstrap resampling will be used to compute standard errors. If \code{boot} is an integer, that number

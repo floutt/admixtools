@@ -498,18 +498,22 @@ f4_from_f2 = function(f2_data, pop1, pop2 = NULL, pop3 = NULL, pop4 = NULL) {
 #' }
 #' @param pops A vector of 5 populations or a five column population matrix.
 #' The following ratios will be computed: `f4(1, 2; 3, 4)/f4(1, 2; 5, 4)`
+#' @param auto_only Use only chromosomes 1 to 22.
+#' @param blgsize SNP block size in Morgan. Default is 0.05 (5 cM). If `blgsize` is 100 or greater, if will be interpreted as base pair distance rather than centimorgan distance.
+#' @param poly_only Exclude sites with identical allele frequencies in all populations.
 #' @param boot If `FALSE` (the default), block-jackknife resampling will be used to compute standard errors.
 #' Otherwise, block-bootstrap resampling will be used to compute standard errors. If `boot` is an integer, that number
 #' will specify the number of bootstrap resamplings. If `boot = TRUE`, the number of bootstrap resamplings will be
 #' equal to the number of SNP blocks.
 #' @param verbose Print progress updates
 #' @return `qpf4ratio` returns a data frame with f4 ratios
-qpf4ratio = function(data, pops, boot = FALSE, verbose = FALSE) {
+qpf4ratio = function(data, pops, auto_only = TRUE, blgsize = 0.05,
+                     poly_only = FALSE, boot = FALSE, verbose = FALSE) {
 
   if(!is.matrix(pops)) pops %<>% t
   if(ncol(pops) != 5) stop("'pops' should be a vector of length 5, or a matrix with 5 columns.")
 
-  f2_blocks = get_f2(data, unique(c(pops)), afprod = TRUE, verbose = verbose)
+  f2_blocks = get_f2(data, unique(c(pops)), auto_only = auto_only, blgsize = blgsize, poly_only = poly_only, afprod = TRUE, verbose = verbose)
 
   samplefun = ifelse(boot, function(x, ...) est_to_boo(x, boot, ...), est_to_loo)
   statfun = ifelse(boot, boot_mat_stats, jack_mat_stats)

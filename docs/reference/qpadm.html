@@ -24,7 +24,7 @@ It can be used to estimate whether the left populations explain all genetic vari
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">admixtools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.8</span>
       </span>
     </div>
 
@@ -105,6 +105,9 @@ It can be used to estimate whether the left populations explain all genetic vari
 <span>  f4blocks <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  fudge <span class="op">=</span> <span class="fl">1e-04</span>,</span>
 <span>  fudge_twice <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  auto_only <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  blgsize <span class="op">=</span> <span class="fl">0.05</span>,</span>
+<span>  poly_only <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  boot <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  getcov <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  constrained <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -146,6 +149,18 @@ It can be used to estimate whether the left populations explain all genetic vari
 
 <dt>fudge_twice</dt>
 <dd><p>Setting this to <code>TRUE</code> should result in p-values that better match those in the original qpAdm program</p></dd>
+
+
+<dt>auto_only</dt>
+<dd><p>Use only chromosomes 1 to 22.</p></dd>
+
+
+<dt>blgsize</dt>
+<dd><p>SNP block size in Morgan. Default is 0.05 (5 cM). If <code>blgsize</code> is 100 or greater, if will be interpreted as base pair distance rather than centimorgan distance.</p></dd>
+
+
+<dt>poly_only</dt>
+<dd><p>Exclude sites with identical allele frequencies in all populations.</p></dd>
 
 
 <dt>boot</dt>

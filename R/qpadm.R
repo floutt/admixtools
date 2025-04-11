@@ -103,6 +103,9 @@ qpadm_weights = function(xmat, qinv, rnk, fudge = 0.0001, iterations = 20,
 #' @param f4blocks Instead of f2 blocks, f4 blocks can be supplied. This is used by \code{\link{qpadm_multi}}
 #' @param fudge Value added to diagonal matrix elements before inverting
 #' @param fudge_twice Setting this to `TRUE` should result in p-values that better match those in the original qpAdm program
+#' @param auto_only Use only chromosomes 1 to 22.
+#' @param blgsize SNP block size in Morgan. Default is 0.05 (5 cM). If `blgsize` is 100 or greater, if will be interpreted as base pair distance rather than centimorgan distance.
+#' @param poly_only Exclude sites with identical allele frequencies in all populations.
 #' @param boot If `FALSE` (the default), block-jackknife resampling will be used to compute standard errors.
 #' Otherwise, block-bootstrap resampling will be used to compute standard errors. If `boot` is an integer, that number
 #' will specify the number of bootstrap resamplings. If `boot = TRUE`, the number of bootstrap resamplings will be
@@ -157,7 +160,8 @@ qpadm_weights = function(xmat, qinv, rnk, fudge = 0.0001, iterations = 20,
 #' qpadm("/my/geno/prefix", left, right, target, allsnps = TRUE)
 #' }
 qpadm = function(data, left, right, target, f4blocks = NULL,
-                 fudge = 0.0001, fudge_twice = FALSE, boot = FALSE, getcov = TRUE,
+                 fudge = 0.0001, fudge_twice = FALSE, auto_only = TRUE, blgsize = 0.05,
+                 poly_only = FALSE, boot = FALSE, getcov = TRUE,
                  constrained = FALSE, return_f4 = FALSE, cpp = TRUE, verbose = TRUE, ...) {
 
   #----------------- prepare f4 stats -----------------
@@ -179,10 +183,12 @@ qpadm = function(data, left, right, target, f4blocks = NULL,
     if(is_geno_prefix(data)) {
       if(return_f4) {
         popcombs = expand_grid(pop1 = target, pop2 = left[-1], pop3 = right, pop4 = right) %>% filter(pop3 != pop4)
-        f4blockdat_all = f4blockdat_from_geno(data, popcombs = popcombs, verbose = verbose, ...)
+        f4blockdat_all = f4blockdat_from_geno(data, popcombs = popcombs, auto_only = auto_only,
+                                              blgsize = blgsize, poly_only = poly_only,  verbose = verbose, ...)
         f4blockdat = f4blockdat_all %>% filter(pop3 == right[1], pop4 != right[1])
       } else {
-        f4blockdat = f4blockdat_from_geno(data, left = left, right = right, verbose = verbose, ...)
+        f4blockdat = f4blockdat_from_geno(data, left = left, right = right, auto_only = auto_only,
+                                          blgsize = blgsize, poly_only = poly_only, verbose = verbose, ...)
       }
       f4blocks = f4blockdat %>% f4blockdat_to_f4blocks()
       if(verbose) {
@@ -197,7 +203,8 @@ qpadm = function(data, left, right, target, f4blocks = NULL,
     } else {
       if(isTRUE(args$allsnps)) stop('"allsnps = TRUE" is only effective when reading data from genotype files!')
       if(verbose) alert_info('Computing f4 stats...\n')
-      f2_blocks = get_f2(data, pops = c(left, right), afprod = TRUE, verbose = verbose)
+      f2_blocks = get_f2(data, pops = c(left, right), auto_only = auto_only, blgsize = blgsize,
+                         poly_only = poly_only, afprod = TRUE, verbose = verbose)
       f4blocks = f2blocks_to_f4blocks(f2_blocks, left, right)
     }
     f4blocks = f4blocks[left[-1], right[-1],,drop=FALSE]
@@ -286,10 +293,10 @@ qpadm = function(data, left, right, target, f4blocks = NULL,
 #' right = c('Chimp.REF', 'Mbuti.DG', 'Russia_Ust_Ishim.DG', 'Switzerland_Bichon.SG')
 #' qpwave(example_f2_blocks, left, right)
 qpwave = function(data, left, right,
-                  fudge = 0.0001, boot = FALSE,
+                  fudge = 0.0001, auto_only = TRUE, blgsize = 0.05, poly_only = FALSE, boot = FALSE,
                   constrained = FALSE, cpp = TRUE, verbose = TRUE)
   qpadm(data = data, left = left, right = right, target = NULL,
-        fudge = fudge, boot = boot,
+        fudge = fudge, auto_only = auto_only, blgsize = blgsize, poly_only = poly_only,  boot = boot,
         constrained = constrained, cpp = cpp, verbose = verbose)
 
 
@@ -719,13 +726,13 @@ fitted_f4_from_f4blockdat = function(f4blockdat, weights, target, left, right) {
 #' right = c('Chimp.REF', 'Mbuti.DG', 'Russia_Ust_Ishim.DG', 'Switzerland_Bichon.SG')
 #' target = 'Denisova.DG'
 #' qpadm_p(example_f2_blocks, left, right, target)
-qpadm_p = function(f2_data, left, right, target = NULL, fudge = 0.0001, boot = FALSE,
+qpadm_p = function(f2_data, left, right, target = NULL, auto_only = TRUE, fudge = 0.0001, boot = FALSE,
                    constrained = FALSE, rnk = length(setdiff(left, target)) - 1, cpp = TRUE,
                    weights = FALSE, f4blocks = NULL) {
 
   if(is.null(f4blocks)) {
     if(!is.null(target)) left = c(target, setdiff(left, target))
-    f2_blocks = get_f2(f2_data, pops = left, pops2 = right, afprod = TRUE)
+    f2_blocks = get_f2(f2_data, pops = left, pops2 = right, auto_only = auto_only, afprod = TRUE)
     f4dat = f2blocks_to_f4stats(f2_blocks, left, right, boot = boot)
   } else {
     f4dat = f4blocks_to_f4stats(f4blocks)
@@ -875,7 +882,6 @@ qpadm_rotate = function(f2_blocks, leftright, target, rightfix = NULL, full_resu
   lr = all_lr2(leftright, length(rightfix))
   if(verbose) alert_info(paste0('Evaluating ', length(lr[[1]]), ' models...\n'))
   qpadm_eval_rotate(f2_blocks, target, lr, rightfix, full_results = full_results, verbose = verbose)
-
 }
 
 #' Rotate populations between left and right

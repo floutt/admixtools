@@ -9,6 +9,7 @@ qpadm_p(
   left,
   right,
   target = NULL,
+  auto_only = TRUE,
   fudge = 1e-04,
   boot = FALSE,
   constrained = FALSE,
@@ -24,6 +25,8 @@ qpadm_p(
 \item{right}{Right populations (outgroups)}
 
 \item{target}{Target population}
+
+\item{auto_only}{Use only chromosomes 1 to 22.}
 
 \item{fudge}{Value added to diagonal matrix elements before inverting}
 
