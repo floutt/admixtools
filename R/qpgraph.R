@@ -500,7 +500,13 @@ qpgraph_precompute_f3_geno = function(data, pops, f3basepop = NULL, lambdascale 
 
   f3blocks = f3blockdat %>% select(-pop1) %>% rename(pop1 = pop2, pop2 = pop3, f2 = est) %>%
     f2dat_to_f2blocks(fill_diag = FALSE)
-  f3blocks = f3blocks[pops[-1],pops[-1],-which(apply(f3blocks, 3, function(x) any(is.na(x))))]
+  na_slices <- which(apply(f3blocks, 3, function(x) any(is.na(x))))
+  if(length(na_slices) == 0) {
+    f3blocks <- f3blocks[pops[-1], pops[-1], , drop=FALSE]  # take all slices
+  } else {
+    f3blocks <- f3blocks[pops[-1], pops[-1], -na_slices, drop=FALSE]  # remove NA slices
+  }
+  #f3blocks = f3blocks[pops[-1],pops[-1],-which(apply(f3blocks, 3, function(x) any(is.na(x))))]
   #f3blocks = f3blocks[pops[-1],pops[-1],-apply(f3blocks, 3, function(x) any(is.na(x)))]
   #f3blocks = f3blocks[pops[-1],pops[-1],]
 
